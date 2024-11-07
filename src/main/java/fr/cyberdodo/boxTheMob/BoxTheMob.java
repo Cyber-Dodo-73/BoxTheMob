@@ -239,6 +239,12 @@ public class BoxTheMob extends JavaPlugin implements Listener {
         Player player = event.getPlayer();
         ItemStack item = player.getInventory().getItemInMainHand();
 
+        Entity mob = event.getRightClicked();
+        if (mob instanceof Vehicle) {
+            // Annule l'événement pour empêcher le joueur de monter
+            event.setCancelled(true);
+        }
+
         if (item != null && item.getType() == Material.WOODEN_HOE && "§6Capture Gun".equals(item.getItemMeta().getDisplayName())) {
             ItemMeta meta = item.getItemMeta();
             PersistentDataContainer data = meta.getPersistentDataContainer();
@@ -276,9 +282,6 @@ public class BoxTheMob extends JavaPlugin implements Listener {
                     updateDurability(item, usesRemaining);
                 }
             }
-
-            // Proceed with capturing the mob
-            Entity mob = event.getRightClicked();
 
             if (mob.getType() == EntityType.WARDEN || mob.getType() == EntityType.ENDER_DRAGON || mob.getType() == EntityType.WITHER) {
                 player.sendMessage("§cCe mob ne peut pas être capturé !");
@@ -321,6 +324,7 @@ public class BoxTheMob extends JavaPlugin implements Listener {
                 livingEntity.setAI(false);
                 livingEntity.setRemoveWhenFarAway(false); // Prevents mob from being removed when far away
                 livingEntity.setPersistent(true); // Prevents mob from naturally despawning
+                livingEntity.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, 1, false, false));
             }
 
             saveMobToDatabase(mobUUID, mob.getType().name());
