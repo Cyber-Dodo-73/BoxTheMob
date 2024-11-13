@@ -240,12 +240,12 @@ public class BoxTheMob extends JavaPlugin implements Listener {
         ItemStack item = player.getInventory().getItemInMainHand();
 
         Entity mob = event.getRightClicked();
-        if (mob instanceof Vehicle) {
-            // Annule l'événement pour empêcher le joueur de monter
-            event.setCancelled(true);
-        }
 
         if (item != null && item.getType() == Material.WOODEN_HOE && "§6Capture Gun".equals(item.getItemMeta().getDisplayName())) {
+            if (mob instanceof Vehicle) {
+                // Annule l'événement pour empêcher le joueur de monter
+                event.setCancelled(true);
+            }
             ItemMeta meta = item.getItemMeta();
             PersistentDataContainer data = meta.getPersistentDataContainer();
 
